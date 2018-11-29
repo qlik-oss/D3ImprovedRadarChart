@@ -68,9 +68,6 @@ export default {
           }
         }
       },
-      sorting: {
-        uses: "sorting"
-      },
       settings: {
         uses: "settings",
         items: {
@@ -179,12 +176,5 @@ export default {
   snapshot: {
     canTakeSnapshot: true
   },
-  paint: paint //($element, layout) => {
-  //   const component = this;
-  //   try {
-  //     paint($element, layout, component);
-  //   } catch (exception) {
-  //     console.error(exception); // eslint-disable-line no-console
-  //   }
-  // }
+  paint: paint
 };
