@@ -162,6 +162,18 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .attr("x", function(d, i){ return rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2); })
     .attr("y", function(d, i){ return rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2); })
     .text(function(d){return d;})
+    .attr("transform", function(d,i){
+      // Find angle of each line (in degrees) and rotate text accordingly
+      let x2 = rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2);
+      let y2 = rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2);
+      const getAngledegree = 180/Math.PI;
+      let textRotate = (Math.atan2(y2, x2))*getAngledegree;
+      // rotate text in opposite direction for readability if dgree of rotation > 90 or < -90
+      if (textRotate > 90 || textRotate < -90) {
+        let tempVal = 180 - textRotate;
+        textRotate = 360 - tempVal;
+      }
+      return "rotate("+textRotate+", "+x2+", "+y2+")"; })
     .call(wrap, cfg.wrapWidth);
 
   /////////////////////////////////////////////////////////
