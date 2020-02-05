@@ -30,8 +30,8 @@ function paint($element, layout) {
     maxValue: 0.6, //What is the value that the biggest circle will represent
     levels: 6, //How many levels or inner circles should there be drawn
     dotRadius: 4, //The size of the colored circles of each blob
-    labelFactor: 1.22, //How much farther than the radius of the outer circle should the labels be placed
-    wrapWidth: 50, //The number of pixels after which a label needs to be given a new line
+    labelFactor: 1.05, //How much farther than the radius of the outer circle should the labels be placed
+    wrapWidth: 1000, //The number of pixels after which a label needs to be given a new line
     strokeWidth: 2.8, //The width of the stroke around each blob
     legendDisplay: layout.showLegend, //Display the legend
     numberFormat: getFORMAT(layout) //Format for number

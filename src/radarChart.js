@@ -157,7 +157,17 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
   axis.append("text")
     .attr("class", "legend")
     .style("font-size", "14px")
-    .attr("text-anchor", "middle")
+    .attr("text-anchor", function(d,i){
+      let x2 = rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2);
+      let y2 = rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2);
+      const getAngledegree = 180/Math.PI;
+      let textRotate = (Math.atan2(y2, x2))*getAngledegree;
+      // rotate text in opposite direction for readability if dgree of rotation > 90 or < -90
+      if (textRotate > 90 || textRotate < -90) {
+        return "end";
+      }
+      return "start"; 
+    })
     .attr("dy", "0.35em")
     .attr("x", function(d, i){ return rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2); })
     .attr("y", function(d, i){ return rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2); })
