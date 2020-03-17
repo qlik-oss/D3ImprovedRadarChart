@@ -94,7 +94,7 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
 
   //Append a g element
   var g = svg.append("g")
-    .attr("transform", "translate(" + (cfg.size.width/2) + "," + (cfg.size.height/2) + ")");
+    .attr("transform", "translate(" + (cfg.size.width/1.8) + "," + (cfg.size.height/2) + ")");
 
   /////////////////////////////////////////////////////////
   ////////// Glow filter for some extra pizzazz ///////////
@@ -171,8 +171,15 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
     .attr("dy", "0.35em")
     .attr("x", function(d, i){ return rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2); })
     .attr("y", function(d, i){ return rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2); })
-    .text(function(d){return d;})
-    .attr("transform", function(d,i){
+    .text(function (d) {
+      if (d.length > 25) {
+        let trimmedString = d.substring(0, 25);
+        return trimmedString;
+      } else {
+        return d;
+      }
+    })
+    .attr("transform", function (d, i) {
       // Find angle of each line (in degrees) and rotate text accordingly
       let x2 = rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2);
       let y2 = rScaleRangeChecked(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2);
@@ -185,6 +192,10 @@ function displayRADAR(className, options, $element, layout, inputData, self) {
       }
       return "rotate("+textRotate+", "+x2+", "+y2+")"; })
     .call(wrap, cfg.wrapWidth);
+
+  axis.selectAll("text")
+    .append("title")
+    .text(function (d) { return d; });
 
   /////////////////////////////////////////////////////////
   ///////////// Draw the radar chart blobs ////////////////
