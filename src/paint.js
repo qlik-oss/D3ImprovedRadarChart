@@ -80,6 +80,8 @@ function getFORMAT(layout) {
 }
 
 function convertHYPERCUBEtoJSON(layout) {
+  var DIM1_LIMIT =100;
+  var DIM2_LIMIT =100;
   var qMatrix = layout.qHyperCube.qDataPages[0].qMatrix;
 
   var structure = [];
@@ -87,16 +89,28 @@ function convertHYPERCUBEtoJSON(layout) {
   var dim2Indecies = {};
   var uniqueDim2Labels = [];
   var uniqueDim2Ids = [];
+  var uniqueDim1Ids = [];
+  var data = [];
 
-  qMatrix.forEach(function(row) {
-    if (uniqueDim2Ids.indexOf(row[1].qElemNumber) === -1) {
+  // filtering out qMatrix to take first 100 unique dimension 1 values.
+  for(var index = 0; index<qMatrix.length; index++){
+    if (uniqueDim1Ids.indexOf(qMatrix[index][0].qElemNumber) === -1 && uniqueDim1Ids.length<DIM1_LIMIT) {
+      uniqueDim1Ids.push(qMatrix[index][0].qElemNumber);
+    }
+    if(uniqueDim1Ids.indexOf(qMatrix[index][0].qElemNumber) !== -1){
+      data.push(qMatrix[index]);
+    }
+  }
+
+  data.forEach(function(row) {
+    if (uniqueDim2Ids.indexOf(row[1].qElemNumber) === -1 && uniqueDim2Ids.length<DIM2_LIMIT) {
       dim2Indecies[row[1].qElemNumber] = uniqueDim2Ids.length;
       uniqueDim2Ids.push(row[1].qElemNumber);
       uniqueDim2Labels.push(row[1].qText);
     }
   });
 
-  qMatrix.forEach(function(row) {
+  data.forEach(function(row) {
     if (dim1Indecies[row[0].qElemNumber] === undefined) {
       // create first dim
       dim1Indecies[row[0].qElemNumber] = structure.length;
@@ -115,19 +129,21 @@ function convertHYPERCUBEtoJSON(layout) {
       });
     }
     // add to second dim
-    structure[dim1Indecies[row[0].qElemNumber]].definition[
-      dim2Indecies[row[1].qElemNumber]
-    ].value = row[2].qNum;
+    if(typeof dim2Indecies[row[1].qElemNumber] !== 'undefined'){
+      structure[dim1Indecies[row[0].qElemNumber]].definition[
+        dim2Indecies[row[1].qElemNumber]
+      ].value = isNaN(row[2].qNum)? 0: row[2].qNum;
+    }
 
     // Check if null
-    if (row[0].qIsNull) {
+    if (row[0].qIsNull && typeof dim2Indecies[row[1].qElemNumber] !== "undefined") {
       structure[dim1Indecies[row[0].qElemNumber]].definition[
         dim2Indecies[row[1].qElemNumber]
       ].dim1IsNull = true;
     }
   });
 
-  var metric1Values = qMatrix.map(function(d) {
+  var metric1Values = data.map(function(d) {
     return d[2].qNum;
   });
 
