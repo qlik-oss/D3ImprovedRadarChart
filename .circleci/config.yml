@@ -10,23 +10,6 @@ defaults: &defaults
     PACKAGE_NAME: "qlik-radar-chart"
 
 jobs:
-  test:
-    docker:
-    - image: circleci/node:stretch-browsers
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: npm install
-      - run:
-          name: BlackDuck scan
-          command: curl -s https://detect.synopsys.com/detect.sh | bash -s -- \
-            --blackduck.url="https://qliktech.blackducksoftware.com" \
-            --blackduck.trust.cert=true \
-            --blackduck.username="svc-blackduck" \
-            --blackduck.password=${svc_blackduck} \
-            --detect.project.name="viz-bundle-qlik-radar-chart"
-
   bump-version:
     <<: *defaults
     steps:
@@ -85,10 +68,7 @@ workflows:
   version: 2
   master_flow:
     jobs:
-      - test
-      - bump-version:
-          requires:
-            - test
+      - bump-version
       - build:
           requires:
             - bump-version

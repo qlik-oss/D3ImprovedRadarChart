@@ -1,5 +1,5 @@
 {
-  "name": "qlik-radar-chart",
+  "name": "@qlik/qlik-radar-chart",
   "version": "0.0.1",
   "description": "A two-dimensional chart using radial axes to show the scoring of a measure in one dimension over another.",
   "homepage": "",
