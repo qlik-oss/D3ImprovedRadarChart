@@ -68,7 +68,7 @@ workflows:
   version: 2
   master_flow:
     jobs:
-      - bump-version:
+      - bump-version
       - build:
           requires:
             - bump-version
